@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
+import { Prisma } from '@prisma/client'
 import { auditAllTools, detectConsolidationOpportunities, type ToolInput } from '@/lib/audit-engine'
 import { generateAISummary } from '@/lib/prompts'
 
@@ -36,11 +37,11 @@ export async function POST(request: NextRequest) {
     // Save to database
     const audit = await prisma.audit.create({
       data: {
-        tools: tools as any,
+        tools: tools as unknown as Prisma.InputJsonValue,
         totalMonthlySpend: auditResults.totalCurrentSpend,
         totalMonthlySavings: auditResults.totalMonthlySavings,
         totalYearlySavings: auditResults.totalYearlySavings,
-        recommendations: allRecommendations as any,
+        recommendations: allRecommendations as unknown as Prisma.InputJsonValue,
         aiSummary,
         isPublic: false,
       },
@@ -50,8 +51,8 @@ export async function POST(request: NextRequest) {
       auditId: audit.id,
       shareId: audit.shareId,
     })
-  } catch (error) {
-    console.error('Audit error:', error)
+  } catch {
+    console.error('Audit error')
     return NextResponse.json(
       { error: 'Failed to process audit' },
       { status: 500 }

@@ -55,8 +55,8 @@ export async function POST(request: NextRequest) {
             `,
           }),
         })
-      } catch (emailError) {
-        console.error('Email send failed:', emailError)
+      } catch {
+        console.error('Email send failed')
         // Don't fail the request if email fails
       }
     }
@@ -65,8 +65,8 @@ export async function POST(request: NextRequest) {
       success: true,
       shareUrl: `${process.env.NEXT_PUBLIC_APP_URL}/share/${audit.shareId}`,
     })
-  } catch (error) {
-    console.error('Lead capture error:', error)
+  } catch {
+    console.error('Lead capture error')
     return NextResponse.json(
       { error: 'Failed to save information' },
       { status: 500 }

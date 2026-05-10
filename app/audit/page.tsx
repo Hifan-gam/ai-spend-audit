@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Plus, Trash2, ArrowRight, Loader2, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -44,7 +44,7 @@ export default function AuditPage() {
       try {
         const parsed = JSON.parse(saved)
         setTools(parsed)
-      } catch (e) {
+      } catch {
         console.error('Failed to parse saved form data')
       }
     }
@@ -74,7 +74,7 @@ export default function AuditPage() {
     setTools(tools.filter((_, i) => i !== index))
   }
 
-  const updateTool = (index: number, field: keyof ToolInput, value: any) => {
+  const updateTool = (index: number, field: keyof ToolInput, value: string | number) => {
     const newTools = [...tools]
     newTools[index] = { ...newTools[index], [field]: value }
     setTools(newTools)
@@ -112,7 +112,7 @@ export default function AuditPage() {
       
       // Navigate to results
       router.push(`/results/${data.auditId}`)
-    } catch (error) {
+    } catch {
       toast({
         title: 'Error',
         description: 'Failed to process audit. Please try again.',
@@ -141,7 +141,7 @@ export default function AuditPage() {
               Audit Your AI Spending
             </h1>
             <p className="text-slate-400 text-lg mb-2">
-              Add your AI tools below and we'll analyze your spending patterns to find savings opportunities.
+              Add your AI tools below and we will analyze your spending patterns to find savings opportunities.
             </p>
             <p className="text-slate-500 text-sm">
               All your data is processed securely and never stored.
@@ -161,7 +161,7 @@ export default function AuditPage() {
               {/* Progress Indicator */}
               <div className="mb-8 p-4 bg-blue-500/5 border border-blue-500/20 rounded-lg">
                 <div className="text-sm text-blue-300 font-medium mb-2">
-                  📊 You've added {tools.filter(t => t.toolName).length} of {tools.length} tools
+                  📊 You have added {tools.filter(t => t.toolName).length} of {tools.length} tools
                 </div>
                 <div className="w-full bg-slate-800 rounded-full h-2">
                   <div
@@ -252,7 +252,7 @@ export default function AuditPage() {
                       <div className="pt-4 border-t border-slate-700/50">
                         <h3 className="text-sm font-semibold text-slate-200 mb-4 flex items-center gap-2">
                           <span className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center text-xs text-green-300">2</span>
-                          What's your spending?
+                          What is your spending?
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
@@ -332,7 +332,7 @@ export default function AuditPage() {
                                 ))}
                               </SelectContent>
                             </Select>
-                            <p className="text-xs text-slate-500 mt-1">What's your main use case?</p>
+                            <p className="text-xs text-slate-500 mt-1">What is your main use case?</p>
                           </div>
                         </div>
                       </div>
@@ -382,8 +382,8 @@ export default function AuditPage() {
                         </>
                       )}
                     </Button>
-                    <p className="text-center text-xs text-slate-500 mt-4">
-                      🔒 Your data is secure and won't be stored or shared
+                      <p className="text-center text-xs text-slate-500 mt-4">
+                      🔒 Your data is secure and will not be stored or shared
                     </p>
                   </CardContent>
                 </Card>

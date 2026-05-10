@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import { useParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { TrendingDown, DollarSign, Sparkles, Loader2, ArrowRight, Share2, Download } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -20,8 +21,9 @@ interface AuditData {
   aiSummary: string
 }
 
-export default function SharePage({ params }: { params: { shareId: string } }) {
-  const { shareId } = React.use(params)
+export default function SharePage() {
+  const params = useParams() as { shareId?: string } | null
+  const shareId = params?.shareId ?? ''
   const { toast } = useToast()
   const [isHydrated, setIsHydrated] = useState(false)
   const [audit, setAudit] = useState<AuditData | null>(null)
@@ -33,25 +35,23 @@ export default function SharePage({ params }: { params: { shareId: string } }) {
 
   useEffect(() => {
     if (!isHydrated) return
-    fetchAudit()
-  }, [shareId, isHydrated])
-
-  const fetchAudit = async () => {
-    try {
-      const response = await fetch(`/api/share/${shareId}`)
-      if (!response.ok) throw new Error('Failed to fetch audit')
-      const data = await response.json()
-      setAudit(data)
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to load shared audit',
-        variant: 'destructive',
-      })
-    } finally {
-      setLoading(false)
+    let mounted = true
+    const run = async () => {
+      try {
+        const response = await fetch(`/api/share/${shareId}`)
+        if (!response.ok) throw new Error('Failed to fetch audit')
+        const data = await response.json()
+        if (!mounted) return
+        setAudit(data)
+      } catch {
+        toast({ title: 'Error', description: 'Failed to load shared audit', variant: 'destructive' })
+      } finally {
+        if (mounted) setLoading(false)
+      }
     }
-  }
+    if (shareId) run()
+    return () => { mounted = false }
+  }, [shareId, isHydrated, toast])
 
   const downloadFile = (filename: string, content: string, mimeType: string) => {
     const blob = new Blob([content], { type: mimeType })
@@ -80,11 +80,7 @@ export default function SharePage({ params }: { params: { shareId: string } }) {
       recommendations: audit.recommendations,
     }
 
-    downloadFile(
-      `ai-spend-shared-report-${audit.id}.json`,
-      JSON.stringify(exportPayload, null, 2),
-      'application/json'
-    )
+    downloadFile(`ai-spend-shared-report-${audit.id}.json`, JSON.stringify(exportPayload, null, 2), 'application/json')
   }
 
   const handleExportCsv = () => {

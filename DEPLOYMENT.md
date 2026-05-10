@@ -5,7 +5,7 @@
 ### Prerequisites
 - GitHub account
 - Vercel account
-- PostgreSQL database (Vercel Postgres, Supabase, or Railway)
+- MySQL database (Railway recommended)
 
 ### Step 1: Push to GitHub
 
@@ -35,7 +35,7 @@ git push -u origin main
 In Vercel dashboard, add these environment variables:
 
 ```env
-DATABASE_URL=postgresql://user:password@host:5432/database
+DATABASE_URL=mysql://user:password@host:3306/database
 ANTHROPIC_API_KEY=your_anthropic_key
 OPENAI_API_KEY=your_openai_key
 RESEND_API_KEY=your_resend_key
@@ -64,7 +64,7 @@ NEXT_PUBLIC_APP_URL=https://your-domain.vercel.app
 **Option C: Railway**
 ```bash
 1. Create project at railway.app
-2. Add PostgreSQL service
+2. Add MySQL service
 3. Copy connection string
 4. Add to environment variables
 ```
@@ -179,7 +179,7 @@ Vercel automatically caches static assets and pages.
 ### Database Connection Pooling
 Use connection pooling in production:
 ```env
-DATABASE_URL=postgresql://user:password@host:5432/db?pgbouncer=true
+DATABASE_URL=mysql://user:password@host:3306/db
 ```
 
 ### Image Optimization

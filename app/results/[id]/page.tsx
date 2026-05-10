@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import { useParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { TrendingDown, DollarSign, Sparkles, Share2, Mail, Loader2, CheckCircle2, Download } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -23,8 +24,9 @@ interface AuditData {
   email?: string
 }
 
-export default function ResultsPage({ params }: { params: { id: string } }) {
-  const { id } = React.use(params)
+export default function ResultsPage() {
+  const params = useParams() as { id?: string } | null
+  const id = params?.id ?? ''
   const { toast } = useToast()
   const [audit, setAudit] = useState<AuditData | null>(null)
   const [loading, setLoading] = useState(true)
@@ -38,27 +40,24 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
   })
 
   useEffect(() => {
-    fetchAudit()
-  }, [id])
-
-  const fetchAudit = async () => {
-    try {
-      const response = await fetch(`/api/audit/${id}`)
-      if (!response.ok) throw new Error('Failed to fetch audit')
-      const data = await response.json()
-      setAudit(data)
-      setShowLeadForm(!data.email)
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to load audit results',
-        variant: 'destructive',
-      })
-    } finally {
-      setLoading(false)
+    let mounted = true
+    const run = async () => {
+      try {
+        const response = await fetch(`/api/audit/${id}`)
+        if (!response.ok) throw new Error('Failed to fetch audit')
+        const data = await response.json()
+        if (!mounted) return
+        setAudit(data)
+        setShowLeadForm(!data.email)
+      } catch {
+        toast({ title: 'Error', description: 'Failed to load audit results', variant: 'destructive' })
+      } finally {
+        if (mounted) setLoading(false)
+      }
     }
-  }
-
+    if (id) run()
+    return () => { mounted = false }
+  }, [id, toast])
   const handleLeadSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
@@ -68,26 +67,20 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          auditId: id,
-          ...formData,
+          email: formData.email,
+          companyName: formData.companyName,
+          role: formData.role,
+          teamSize: formData.teamSize,
+          auditId: audit?.id,
         }),
       })
 
-      if (!response.ok) throw new Error('Failed to save')
+      if (!response.ok) throw new Error('Failed to submit')
 
-      await response.json()
+      toast({ title: 'Thanks', description: 'We sent the report to your email' })
       setShowLeadForm(false)
-      
-      toast({
-        title: 'Success!',
-        description: 'Check your email for the full report',
-      })
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to save information',
-        variant: 'destructive',
-      })
+    } catch {
+      toast({ title: 'Error', description: 'Failed to submit details', variant: 'destructive' })
     } finally {
       setIsSubmitting(false)
     }
@@ -104,11 +97,8 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
         title: 'Link copied!',
         description: 'Share your results with your team',
       })
-    } catch (error) {
-      toast({
-        title: 'Share URL',
-        description: shareUrl,
-      })
+    } catch {
+      toast({ title: 'Share URL', description: shareUrl })
     }
   }
 

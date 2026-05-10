@@ -1,14 +1,14 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { shareId: string } }
-) {
+export async function GET(request: Request) {
+  const url = new URL(request.url)
+  const segments = url.pathname.split('/')
+  const shareId = segments[segments.length - 1]
   try {
     const audit = await prisma.audit.findUnique({
       where: { 
-        shareId: params.shareId,
+        shareId,
         isPublic: true,
       },
       select: {
@@ -30,8 +30,8 @@ export async function GET(
     }
 
     return NextResponse.json(audit)
-  } catch (error) {
-    console.error('Fetch shared audit error:', error)
+  } catch {
+    console.error('Fetch shared audit error')
     return NextResponse.json(
       { error: 'Failed to fetch shared audit' },
       { status: 500 }

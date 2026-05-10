@@ -14,7 +14,7 @@ A production-ready web application that helps startups and engineering teams ana
 ## Tech Stack
 
 - **Frontend**: Next.js 15 (App Router), TypeScript, Tailwind CSS, shadcn/ui, Framer Motion
-- **Backend**: Next.js API Routes, Prisma ORM, PostgreSQL
+- **Backend**: Next.js API Routes, Prisma ORM, MySQL
 - **Integrations**: Anthropic API, OpenAI API, Resend
 - **Testing**: Vitest
 - **Deployment**: Vercel-ready
@@ -24,7 +24,7 @@ A production-ready web application that helps startups and engineering teams ana
 ### Prerequisites
 
 - Node.js 20+
-- PostgreSQL database
+- MySQL database
 - API keys (optional but recommended):
   - Anthropic API key or OpenAI API key
   - Resend API key
@@ -49,7 +49,7 @@ cp .env.example .env.local
 
 Edit `.env.local` with your credentials:
 ```env
-DATABASE_URL="postgresql://user:password@localhost:5432/ai_spend_audit"
+DATABASE_URL="mysql://user:password@localhost:3306/ai_spend_audit"
 ANTHROPIC_API_KEY="your_key_here"
 RESEND_API_KEY="your_key_here"
 FROM_EMAIL="noreply@yourdomain.com"
@@ -112,11 +112,8 @@ npm run test:ui
 
 ### Database Setup
 
-For production, use a managed PostgreSQL service:
-- Vercel Postgres
-- Supabase
+For production, use a managed MySQL service:
 - Railway
-- Neon
 
 Update `DATABASE_URL` in your production environment variables.
 
@@ -124,7 +121,7 @@ Update `DATABASE_URL` in your production environment variables.
 
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `DATABASE_URL` | PostgreSQL connection string | Yes |
+| `DATABASE_URL` | MySQL connection string | Yes |
 | `ANTHROPIC_API_KEY` | Anthropic API key for AI summaries | No* |
 | `OPENAI_API_KEY` | OpenAI API key for AI summaries | No* |
 | `RESEND_API_KEY` | Resend API key for emails | No |

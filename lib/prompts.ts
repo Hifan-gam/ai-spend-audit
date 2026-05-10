@@ -85,8 +85,8 @@ export async function generateAISummary(
 
     // Fallback message
     return `Your team is spending $${totalCurrentSpend}/month on AI tools. We've identified $${totalMonthlySavings}/month in potential savings—that's $${totalYearlySavings}/year back in your budget. The biggest opportunity is optimizing your tool stack and eliminating redundant subscriptions. Start by reviewing your seat allocations and consolidating overlapping tools. Every dollar saved is a dollar you can invest in growth.`
-  } catch (error) {
-    console.error('AI summary generation failed:', error)
+  } catch {
+    console.error('AI summary generation failed')
     return `Your team is spending $${totalCurrentSpend}/month on AI tools. We've identified $${totalMonthlySavings}/month in potential savings—that's $${totalYearlySavings}/year back in your budget. The biggest opportunity is optimizing your tool stack and eliminating redundant subscriptions.`
   }
 }

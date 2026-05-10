@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { ArrowRight, Sparkles, TrendingDown, Shield, Zap } from 'lucide-react'
+import { ArrowRight, Sparkles, TrendingDown, Zap } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import Link from 'next/link'
@@ -26,7 +26,9 @@ export default function Home() {
 
           <h1 className="mb-6 text-5xl font-bold tracking-tight text-white sm:text-7xl">
             Stop Overpaying for{' '}
-            <span className="bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">AI Tools</span>
+            <span className="block text-cyan-300 sm:inline sm:bg-gradient-to-r sm:from-blue-400 sm:to-cyan-300 sm:bg-clip-text sm:text-transparent sm:drop-shadow-[0_0_12px_rgba(125,211,252,0.35)]">
+              AI Tools
+            </span>
           </h1>
 
           <p className="mb-10 text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">

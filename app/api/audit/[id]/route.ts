@@ -1,13 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: Request) {
+  const url = new URL(request.url)
+  const segments = url.pathname.split('/')
+  const id = segments[segments.length - 1]
   try {
     const audit = await prisma.audit.findUnique({
-      where: { id: params.id },
+      where: { id },
     })
 
     if (!audit) {
@@ -18,8 +18,8 @@ export async function GET(
     }
 
     return NextResponse.json(audit)
-  } catch (error) {
-    console.error('Fetch audit error:', error)
+  } catch {
+    console.error('Fetch audit error')
     return NextResponse.json(
       { error: 'Failed to fetch audit' },
       { status: 500 }
