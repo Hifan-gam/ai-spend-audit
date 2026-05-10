@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Audit {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // User info
+  email         String?
+  companyName   String?
+  role          String?
+  teamSize      String?
+  
+  // Audit data
+  tools         Json
+  totalMonthlySpend Float
+  totalMonthlySavings Float
+  totalYearlySavings Float
+  recommendations Json
+  aiSummary     String?
+  
+  // Sharing
+  shareId       String   @unique @default(cuid())
+  isPublic      Boolean  @default(false)
+  
+  @@index([shareId])
+  @@index([email])
+}

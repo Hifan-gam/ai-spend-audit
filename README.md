@@ -1,36 +1,173 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Spend Audit
+
+A production-ready web application that helps startups and engineering teams analyze their AI software spending and discover cost-saving opportunities.
+
+## Features
+
+- **AI Spend Analysis**: Analyze spending across 9+ AI tools including Cursor, GitHub Copilot, Claude, ChatGPT, and more
+- **Smart Recommendations**: Rule-based audit engine that detects overspending, unused seats, and consolidation opportunities
+- **AI-Powered Summaries**: Personalized audit summaries generated using Anthropic or OpenAI APIs
+- **Lead Capture**: Email collection with transactional emails via Resend
+- **Shareable Reports**: Public URLs with Open Graph metadata for social sharing
+- **Modern UI**: Dark theme with glassmorphism effects, animations, and responsive design
+
+## Tech Stack
+
+- **Frontend**: Next.js 15 (App Router), TypeScript, Tailwind CSS, shadcn/ui, Framer Motion
+- **Backend**: Next.js API Routes, Prisma ORM, PostgreSQL
+- **Integrations**: Anthropic API, OpenAI API, Resend
+- **Testing**: Vitest
+- **Deployment**: Vercel-ready
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 20+
+- PostgreSQL database
+- API keys (optional but recommended):
+  - Anthropic API key or OpenAI API key
+  - Resend API key
+
+### Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repository-url>
+cd ai-spend-audit
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Set up environment variables:
+```bash
+cp .env.example .env.local
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Edit `.env.local` with your credentials:
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/ai_spend_audit"
+ANTHROPIC_API_KEY="your_key_here"
+RESEND_API_KEY="your_key_here"
+FROM_EMAIL="noreply@yourdomain.com"
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
+```
 
-## Learn More
+4. Set up the database:
+```bash
+npm run prisma:push
+```
 
-To learn more about Next.js, take a look at the following resources:
+5. Run the development server:
+```bash
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Open [http://localhost:3000](http://localhost:3000) to see the application.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Project Structure
 
-## Deploy on Vercel
+```
+ai-spend-audit/
+├── app/                    # Next.js app directory
+│   ├── api/               # API routes
+│   ├── audit/             # Audit form page
+│   ├── results/           # Results page
+│   ├── share/             # Public share page
+│   └── page.tsx           # Landing page
+├── components/            # React components
+│   └── ui/               # shadcn/ui components
+├── lib/                   # Utility functions
+│   ├── audit-engine.ts   # Core audit logic
+│   ├── pricing-data.ts   # Tool pricing database
+│   ├── prompts.ts        # AI prompt templates
+│   └── utils.ts          # Helper functions
+├── prisma/               # Database schema
+└── __tests__/            # Test files
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Testing
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Run tests:
+```bash
+npm test
+```
+
+Run tests with UI:
+```bash
+npm run test:ui
+```
+
+## Deployment
+
+### Vercel (Recommended)
+
+1. Push your code to GitHub
+2. Import project in Vercel
+3. Add environment variables
+4. Deploy
+
+### Database Setup
+
+For production, use a managed PostgreSQL service:
+- Vercel Postgres
+- Supabase
+- Railway
+- Neon
+
+Update `DATABASE_URL` in your production environment variables.
+
+## Environment Variables
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `DATABASE_URL` | PostgreSQL connection string | Yes |
+| `ANTHROPIC_API_KEY` | Anthropic API key for AI summaries | No* |
+| `OPENAI_API_KEY` | OpenAI API key for AI summaries | No* |
+| `RESEND_API_KEY` | Resend API key for emails | No |
+| `FROM_EMAIL` | Sender email address | No |
+| `NEXT_PUBLIC_APP_URL` | Application URL | Yes |
+
+*At least one AI API key is recommended for personalized summaries
+
+## Features in Detail
+
+### Audit Engine
+
+The audit engine analyzes AI tool spending and provides recommendations:
+
+- **Seat Optimization**: Detects unused seats
+- **Plan Recommendations**: Suggests downgrades for small teams
+- **Alternative Tools**: Recommends cheaper alternatives
+- **API Optimization**: Identifies high API costs
+- **Consolidation**: Detects overlapping tool subscriptions
+
+### Lead Capture
+
+After viewing results, users can:
+- Enter email to receive full report
+- Get shareable public URL
+- Receive transactional email (if configured)
+
+### Sharing
+
+Each audit gets a unique share URL with:
+- Public-safe data only
+- Open Graph metadata
+- Twitter card support
+- SEO-friendly routing
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+MIT License - feel free to use this project for your own purposes.
+
+## Support
+
+For issues and questions, please open an issue on GitHub.
